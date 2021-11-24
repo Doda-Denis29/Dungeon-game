@@ -44,7 +44,7 @@ again:
 	auto select = 1;
 	while (select != 0)
 	{
-		sound(2);
+		//sound(2);
 		char op = _getch();
 		if (op == '1')
 		{
@@ -730,6 +730,7 @@ void back(size_t bac)
 		while (!H3.eof())
 		{
 			getline(H3, c);
+			space(29);
 			cout << c << "\n";
 		}
 		break;
@@ -737,6 +738,7 @@ void back(size_t bac)
 		while (!H1.eof())
 		{
 			getline(H1, c);
+			space(22);
 			cout << c << "\n";
 		}
 		break;
@@ -746,6 +748,7 @@ void back(size_t bac)
 		while (!BS.eof())
 		{
 			getline(BS, c);
+			space(33);
 			delay(0.5);
 			cout << c << " \n";
 		}
@@ -756,14 +759,16 @@ void back(size_t bac)
 		{
 			if (warn[in] == warn[in + 1])
 			{
-				delay(0.25);
+				continue;
 			}
 			else
 			{
-				delay(0.5);
+				delay(0.2);
 			}
 			cout << warn[in];
 		}
+		cout << endl << "\t\t\t\t";
+		system("pause");
 		break;
 	case 3: //Skelly
 		system("color F");
@@ -895,7 +900,7 @@ void game(bool Life,int& pos)
 						Life = false;
 					}
 				}
-				else if (pos >= 9 && pos <= 12) //SkellyWarrior
+				else if (pos >= 9 && pos <= 13) //SkellyWarrior
 				{
 					a.battle('@');
 					if (Php <= 0)
@@ -1038,12 +1043,12 @@ void Abilities::addAbM(char id)
 	case '@': //For Skelies warrior
 		name = "SkellyWarrior";
 		mname = name;
-		hp = 10;
+		hp = 6.5;
 		Mhp = hp;
 		atM.clear();
 		stamina = 12;
 		strength = 5;
-		armour = 6;
+		armour = 3;
 		mana = 0;
 		num_of_spells = 0;
 		atM.push_back(stamina);
