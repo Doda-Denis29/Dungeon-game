@@ -90,16 +90,27 @@ int SkellyA()
     {
         return 1;
     }
-    else if (atc == 0 || atc == 1)
+}
+
+int DemonicoA()
+{
+    size_t atc = rand();
+    if (atc % 2 == 0)
+    {
+        return 0;
+    }
+    else if (atc % 5 == 0)
+    {
+        return 1;
+    }
+    else if (atc % 3 == 0)
     {
         return 2;
     }
-}
-
-int Demonico(size_t atc)
-{
-    atc = rand() % 4 + 1;
-    return atc;
+    else
+    {
+        return 3;
+    }
 }
 
 #endif

@@ -26,7 +26,7 @@ int main()
 {
 	auto p = -1; //The position in the map
 	mapINIT(map); //Initilizing the map with everything that it needs
-	game(1, p); //The actual game
+	//game(1, p); //The actual game
 }
 
 void meniu()
@@ -1351,6 +1351,74 @@ void Abilities::battle(char id)
 					cout << "\n";
 					system("pause");
 				}
+				break;
+			case 5: //Demon
+				if (DemonicoA() == 0)
+				{
+					//Spells
+				}
+				else if (DemonicoA() == 1)
+				{
+					mac = 0;
+					if (atM.at(mac) > 0)
+					{
+						atM.at(mac) -= 2;
+						pac = 2;
+						mac = 1;
+						if (atP.at(pac) == 0)
+						{
+							Php -= atM.at(mac) / 2; //Same thing from the player side
+							system("cls");
+							back(enem);
+							logmess(3);
+							cout << "\n";
+							system("pause");
+						}
+						else
+						{
+							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+							system("cls");
+							back(enem);
+							logmess(5);
+							cout << "\n";
+							system("pause");
+						}
+					}
+				}
+				else if (DemonicoA() == 2)
+				{
+					mac = 2;
+					atM.at(mac) += 2;
+					mac = 0;
+					atM.at(mac) += 3;
+					system("cls");
+					back(enem);
+					logmess(12);
+					system("pause");
+				}
+				else if (DemonicoA() == 3)
+				{
+					mac = 0;
+					system("cls");
+					back(enem);
+					if (Php < 4 || atM.at(mac)>10)
+					{
+						logmess(8); //Success
+						atM.at(mac)++;
+					}
+					else
+					{
+						logmess(9); //Not success
+					}
+					cout << "\n";
+					system("pause");
+				}
+				break;
+			case 6: //beast
+				break;
+			case 7: //LastBoss
+				break;
+			case 8: //LastLastBoss
 				break;
 			}
 		}
