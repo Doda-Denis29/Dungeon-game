@@ -26,8 +26,7 @@
 #define Apple_sauce mana;
 class Abilities { //Abs for every mob
 public:
-	Abilities() {}
-	Abilities(float hp, float stamina, float mana, std::string name, std::string name_of_spell, int armour, int num_of_spells, int strength, char id)
+	Abilities()
 	{
 		this->hp = hp;
 		this->stamina = stamina;

@@ -62,22 +62,6 @@ void mapINIT(std::vector <short>& a)
     }
 }
 
-void moveinput(char k, int& p)
-{
-    if (k == 'W' || k == 'w')
-    {
-        p++;
-    }
-    else if (k == 's' || k == 'S')
-    {
-        p--;
-    }
-    else
-    {
-        moveinput(k, p);
-    }
-}
-
 void logdetailsINIT(char (*t)[97], size_t rows) //This was the hardest thing to do
 {
     std::ifstream file("log.txt");

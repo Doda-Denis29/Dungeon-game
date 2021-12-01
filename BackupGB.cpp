@@ -7,6 +7,7 @@ bool cont = 1; //Cont pretty much to check if we should start the game loop
 char t[6][97]; //The box
 void meniu(); //Start up meniu
 void death_screen(); //Death Screen
+void moveinput(char k, int& p); //moving the player
 void back(size_t bac); //Backgrounds 0 - Default hallway, 1 - splitt hallway, 2 - killed enemy, 3 - Skelly, 4 - SkellyWarr, 5 - Demonico, 6 - Beast, 7;8;9 - lastB1/B2/B3, 10 - door
 void space(size_t numb_of_spaces); //To help ourselfs with spaces
 void decs(int& pos); //Decision for the 2's of the vec
@@ -23,7 +24,7 @@ float Php{}, Mhp{};
 string pname{}, mname{};
 int main()
 {
-	auto p = 0; //The position in the map
+	auto p = -1; //The position in the map
 	mapINIT(map); //Initilizing the map with everything that it needs
 	game(1, p); //The actual game
 }
@@ -681,6 +682,30 @@ void logmess(size_t op)
 	}
 }
 
+void moveinput(char k, int& p)
+{
+	while (k != 's' && k != 'S' && k != 'w' && k != 'W')
+	{
+		system("cls");
+		system("color F");
+		back(0);
+		cin >> k;
+	}
+	if ((k == 'S' || k == 's') && p == 0)
+	{
+		p++;
+		p--;
+	}
+	else if (k == 'S' || k == 's')
+	{
+		p--;
+	}
+	else if (k == 'w' || k == 'W')
+	{
+		p++;
+	}
+}
+
 void sound(size_t op)
 {
 	switch (op)
@@ -874,22 +899,10 @@ void game(bool Life,int& pos)
 		system("cls");
 		while (Life && pos < map.size()) // Actual game loop
 		{
-			system("color F");
-			back(0);
-			cin >> key;
-			if (pos == 0 && (key == 's' || key == 'S')) //In case you try to get out of the map and to not get an out of range problem, we just increment by one 
-			{
-				pos++;
-				moveinput(key, pos); //moving us
-			}
-			else
-			{
-				moveinput(key, pos);
-			}
-			switch (map.at(pos - 1)) //What will happen when you hit 0-walk, 1-fight, 2-dec, 3-boss fight
+			moveinput(key, pos);
+			switch (map.at(pos)) //What will happen when you hit 0-walk, 1-fight, 2-dec, 3-boss fight
 			{
 			case 0:
-				back(0);
 				break;
 			case 1:
 				if (pos >= 3 && pos <= 6) //Skelly
