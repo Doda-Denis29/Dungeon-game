@@ -11,6 +11,8 @@ void moveinput(char k, int& p); //moving the player
 void back(size_t bac); //Backgrounds 0 - Default hallway, 1 - splitt hallway, 2 - killed enemy, 3 - Skelly, 4 - SkellyWarr, 5 - Demonico, 6 - Beast, 7;8;9 - lastB1/B2/B3, 10 - door
 void space(size_t numb_of_spaces); //To help ourselfs with spaces
 void decs(int& pos); //Decision for the 2's of the vec
+void visual_hudP(); //For player
+void visual_hudM(char op); //For mobc
 void game(bool Life, int& pos); //The game loop
 void sound(size_t op); //Sound effects
 void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11 - for hp & stamina, 12 - armour up m
@@ -24,8 +26,10 @@ float Php{}, Mhp{};
 string pname{}, mname{};
 int main()
 {
-	auto p = -1; //The position in the map
+	int p = -1; //The position in the map
 	mapINIT(map); //Initilizing the map with everything that it needs
+	a.addAbP();
+	visual_hudP();
 	//game(1, p); //The actual game
 }
 
@@ -706,6 +710,35 @@ void moveinput(char k, int& p)
 	}
 }
 
+void visual_hudP()
+{
+	cout << " " << pname << "'s STATS :\n ";
+	for (auto in = 0; in < pname.size(); in++)
+	{
+		if (in % 2 == 0)
+		{
+			cout << "<";
+		}
+		else
+		{
+			cout << ">";
+		}
+	}
+	cout << "<><><><><>\n";
+	cout << " HP: ";
+	for (auto in = 0; in < Php; in++)
+	{
+		cout << "#";
+	}
+	cout << "\n";
+	cout << " STA:";
+	for (auto in = 0; in < atP.at(0); in++)
+	{
+		cout << "*";
+	}
+	cout << "\n";
+}
+
 void sound(size_t op)
 {
 	switch (op)
@@ -897,10 +930,10 @@ void game(bool Life,int& pos)
 		cout << "Press any key to continue ";
 		char key = _getch();
 		system("cls");
-		while (Life && pos < map.size()) // Actual game loop
+		while (Life) // Actual game loop
 		{
 			moveinput(key, pos);
-			switch (map.at(pos)) //What will happen when you hit 0-walk, 1-fight, 2-dec, 3-boss fight
+			switch (map.at(pos))
 			{
 			case 0:
 				break;
