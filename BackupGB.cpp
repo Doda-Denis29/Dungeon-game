@@ -12,7 +12,6 @@ void back(size_t bac); //Backgrounds 0 - Default hallway, 1 - splitt hallway, 2 
 void space(size_t numb_of_spaces); //To help ourselfs with spaces
 void decs(int& pos); //Decision for the 2's of the vec
 void visual_hud(); //For player and mobs
-int find_MAXLength(); //A helper function of visual hud
 void game(bool Life, int& pos); //The game loop
 void sound(size_t op); //Sound effects
 void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11 - for hp & stamina, 12 - armour up m
@@ -708,25 +707,10 @@ void moveinput(char k, int& p)
 	}
 }
 
-int find_MAXLength()
-{
-	int max = -41055, len{};
-	len = mname.size() + 11;
-	getMax(len, max);
-	len = 0;
-	len = Mhp + 4;
-	getMax(len, max);
-	len = 0;
-	len = atM.at(0) + 4;
-	getMax(len, max);
-	return max;
-}
-
 void visual_hud()
 {
 	cout << " " << pname << "'s STATS :";
-	int len = find_MAXLength();
-	space(92 - len - mname.size() - pname.size());
+	space(75 - pname.size() - mname.size());
 	cout << mname << "'s STATS :\n";
 	for (auto in = 0; in < 96; in++)
 	{
@@ -745,7 +729,7 @@ void visual_hud()
 	{
 		cout << "#";
 	}
-	space(92 - len - Mhp);
+	space(87 - Php - Mhp);
 	cout << "HP: ";
 	for (auto in = 0; in < Mhp; in++)
 	{
@@ -757,11 +741,35 @@ void visual_hud()
 	{
 		cout << "*";
 	}
-	space(92 - len - atM.at(0));
+	space(87 - atP.at(0) - atM.at(0));
 	cout << "STA:";
 	for (auto in = 0; in < atM.at(0); in++)
 	{
 		cout << "*";
+	}
+	cout << endl;
+	cout << " ARM:";
+	for (auto in = 0; in < atP.at(2); in++)
+	{
+		cout << "$";
+	}
+	space(87 - atP.at(2) - atM.at(2));
+	cout << "ARM:";
+	for (auto in = 0; in < atM.at(2); in++)
+	{
+		cout << "$";
+	}
+	cout << endl;
+	cout << " STR:";
+	for (auto in = 0; in < atP.at(1); in++)
+	{
+		cout << "&";
+	}
+	space(87 - atP.at(1) - atM.at(1));
+	cout << "STR:";
+	for (auto in = 0; in < atM.at(1); in++)
+	{
+		cout << "&";
 	}
 	cout << endl;
 }
