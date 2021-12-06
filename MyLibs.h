@@ -62,6 +62,15 @@ void mapINIT(std::vector <short>& a)
     }
 }
 
+int getMax(int numb, int& max)
+{
+    if (numb > max)
+    {
+        max = numb;
+    }
+    return max;
+}
+
 void logdetailsINIT(char (*t)[97], size_t rows) //This was the hardest thing to do
 {
     std::ifstream file("log.txt");

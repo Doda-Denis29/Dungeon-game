@@ -11,8 +11,8 @@ void moveinput(char k, int& p); //moving the player
 void back(size_t bac); //Backgrounds 0 - Default hallway, 1 - splitt hallway, 2 - killed enemy, 3 - Skelly, 4 - SkellyWarr, 5 - Demonico, 6 - Beast, 7;8;9 - lastB1/B2/B3, 10 - door
 void space(size_t numb_of_spaces); //To help ourselfs with spaces
 void decs(int& pos); //Decision for the 2's of the vec
-void visual_hudP(); //For player
-void visual_hudM(char op); //For mobc
+void visual_hud(); //For player and mobs
+int find_MAXLength(); //A helper function of visual hud
 void game(bool Life, int& pos); //The game loop
 void sound(size_t op); //Sound effects
 void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11 - for hp & stamina, 12 - armour up m
@@ -28,9 +28,7 @@ int main()
 {
 	int p = -1; //The position in the map
 	mapINIT(map); //Initilizing the map with everything that it needs
-	a.addAbP();
-	visual_hudP();
-	//game(1, p); //The actual game
+	game(1, p); //The actual game
 }
 
 void meniu()
@@ -710,10 +708,27 @@ void moveinput(char k, int& p)
 	}
 }
 
-void visual_hudP()
+int find_MAXLength()
 {
-	cout << " " << pname << "'s STATS :\n ";
-	for (auto in = 0; in < pname.size(); in++)
+	int max = -41055, len{};
+	len = mname.size() + 11;
+	getMax(len, max);
+	len = 0;
+	len = Mhp + 4;
+	getMax(len, max);
+	len = 0;
+	len = atM.at(0) + 4;
+	getMax(len, max);
+	return max;
+}
+
+void visual_hud()
+{
+	cout << " " << pname << "'s STATS :";
+	int len = find_MAXLength();
+	space(92 - len - mname.size() - pname.size());
+	cout << mname << "'s STATS :\n";
+	for (auto in = 0; in < 96; in++)
 	{
 		if (in % 2 == 0)
 		{
@@ -724,19 +739,31 @@ void visual_hudP()
 			cout << ">";
 		}
 	}
-	cout << "<><><><><>\n";
+	cout << endl;
 	cout << " HP: ";
 	for (auto in = 0; in < Php; in++)
 	{
 		cout << "#";
 	}
-	cout << "\n";
+	space(92 - len - Mhp);
+	cout << "HP: ";
+	for (auto in = 0; in < Mhp; in++)
+	{
+		cout << "#";
+	}
+	cout << endl;
 	cout << " STA:";
 	for (auto in = 0; in < atP.at(0); in++)
 	{
 		cout << "*";
 	}
-	cout << "\n";
+	space(92 - len - atM.at(0));
+	cout << "STA:";
+	for (auto in = 0; in < atM.at(0); in++)
+	{
+		cout << "*";
+	}
+	cout << endl;
 }
 
 void sound(size_t op)
@@ -1205,6 +1232,7 @@ void Abilities::battle(char id)
 	while (Php > 0 && Mhp > 0) //Fight time
 	{
 		system("cls");
+		visual_hud();
 		back(enem);
 		logmess(1); //Options are presented
 		cout << "\n";
@@ -1221,6 +1249,7 @@ void Abilities::battle(char id)
 				{
 					Mhp -= atP.at(pac) / 2; //If no it gets a good chunck of damage
 					system("cls");
+					visual_hud();
 					back(enem);
 					logmess(2);
 					cout << "\n";
@@ -1230,6 +1259,7 @@ void Abilities::battle(char id)
 				{
 					Mhp -= atP.at(pac) / atM.at(mac); //If so it doesn't get a good chunck of damage
 					system("cls");
+					visual_hud();
 					back(enem);
 					logmess(4);
 					cout << "\n";
@@ -1244,6 +1274,7 @@ void Abilities::battle(char id)
 			pac = 0;
 			atP.at(pac) += 3;
 			system("cls");
+			visual_hud();
 			back(enem);
 			logmess(10);
 			system("pause");
@@ -1252,14 +1283,17 @@ void Abilities::battle(char id)
 		{
 			pac = 0;
 			system("cls");
-			back(enem);
 			if (Mhp < 4 || atP.at(pac)>10)
 			{
+				visual_hud();
+				back(enem);
 				logmess(6); //Success
 				atP.at(pac)++;
 			}
 			else
 			{
+				visual_hud();
+				back(enem);
 				logmess(7); //Not success
 			}
 			cout << "\n";
@@ -1282,6 +1316,7 @@ void Abilities::battle(char id)
 						{
 							Php -= atM.at(mac) / 2; //Same thing from the player side
 							system("cls");
+							visual_hud();
 							back(enem);
 							logmess(3);
 							cout << "\n";
@@ -1291,6 +1326,7 @@ void Abilities::battle(char id)
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
 							system("cls");
+							visual_hud();
 							back(enem);
 							logmess(5);
 							cout << "\n";
@@ -1305,6 +1341,7 @@ void Abilities::battle(char id)
 					mac = 0;
 					atM.at(mac) += 3;
 					system("cls");
+					visual_hud();
 					back(enem);
 					logmess(12);
 					system("pause");
@@ -1313,14 +1350,17 @@ void Abilities::battle(char id)
 				{
 					mac = 0;
 					system("cls");
-					back(enem);
 					if (Php < 4 || atM.at(mac)>10)
 					{
-						logmess(8); //Success
 						atM.at(mac)++;
+						visual_hud();
+						back(enem);
+						logmess(8); //Success
 					}
 					else
 					{
+						visual_hud();
+						back(enem);
 						logmess(9); //Not success
 					}
 					cout << "\n";
@@ -1340,6 +1380,7 @@ void Abilities::battle(char id)
 						{
 							Php -= atM.at(mac) / 2; //Same thing from the player side
 							system("cls");
+							visual_hud();
 							back(enem);
 							logmess(3);
 							cout << "\n";
@@ -1349,6 +1390,7 @@ void Abilities::battle(char id)
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
 							system("cls");
+							visual_hud();
 							back(enem);
 							logmess(5);
 							cout << "\n";
@@ -1363,6 +1405,7 @@ void Abilities::battle(char id)
 					mac = 0;
 					atM.at(mac) += 3;
 					system("cls");
+					visual_hud();
 					back(enem);
 					logmess(12);
 					system("pause");
@@ -1371,14 +1414,17 @@ void Abilities::battle(char id)
 				{
 					mac = 0;
 					system("cls");
-					back(enem);
 					if (Php < 4 || atM.at(mac)>10)
 					{
-						logmess(8); //Success
+						visual_hud();
+						back(enem);
 						atM.at(mac)++;
+						logmess(8); //Success
 					}
 					else
 					{
+						visual_hud();
+						back(enem);
 						logmess(9); //Not success
 					}
 					cout << "\n";
@@ -1402,6 +1448,7 @@ void Abilities::battle(char id)
 						{
 							Php -= atM.at(mac) / 2; //Same thing from the player side
 							system("cls");
+							visual_hud();
 							back(enem);
 							logmess(3);
 							cout << "\n";
@@ -1411,6 +1458,7 @@ void Abilities::battle(char id)
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
 							system("cls");
+							visual_hud();
 							back(enem);
 							logmess(5);
 							cout << "\n";
@@ -1425,6 +1473,7 @@ void Abilities::battle(char id)
 					mac = 0;
 					atM.at(mac) += 3;
 					system("cls");
+					visual_hud();
 					back(enem);
 					logmess(12);
 					system("pause");
@@ -1433,6 +1482,7 @@ void Abilities::battle(char id)
 				{
 					mac = 0;
 					system("cls");
+					visual_hud();
 					back(enem);
 					if (Php < 4 || atM.at(mac)>10)
 					{
