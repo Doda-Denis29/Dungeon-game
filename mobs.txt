@@ -8,13 +8,3 @@ Skelly
 0
 Nothing
 
-@
-SkellyWarrior
-6.5
-12
-5
-3
-0
-0
-Nothing
-

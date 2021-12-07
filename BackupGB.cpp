@@ -14,7 +14,7 @@ void decs(int& pos); //Decision for the 2's of the vec
 void visual_hud(); //For player and mobs
 void game(bool Life, int& pos); //The game loop
 void sound(size_t op); //Sound effects
-void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11 - for hp & stamina, 12 - armour up m
+void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11;13 - doing a lot of dmg PL/M, 12 - armour up m
 vector <float> atP; //Abilities for player
 vector <float> atM; //Abilities for mobs
 vector <string> spells; //The vector where all the spells are being placed
@@ -173,7 +173,7 @@ void logmess(size_t op)
 	const char intiB[] = { " was not intimidated" };
 	const char intiN[] = { " was intimidated" };
 	const char defU[] = { " armoured up" };
-	char hpBar[25], staBar[25];
+	const char attA[] = { " did an enormous amount of damage" };
 	auto ly = 0, con = 0, ly1 = 0, con1 = 0, ly2 = 0, con2 = 0;
 	switch (op)
 	{
@@ -645,8 +645,37 @@ void logmess(size_t op)
 			cout << "\n";
 		}
 		break;
-	case 11: //hp bar & stamina bar
+	case 11: //When an enormous amount of damage pl
 		logdetailsINIT(t, 6);
+		for (size_t x = 0; x < 6; x++)
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (x == 2 && y == 5)
+				{
+					for (char c : pname)
+					{
+						t[x][y] = c;
+						y++;
+					}
+					for (auto i = 0; i < strlen(attA); ++i)
+					{
+						t[x][y] = attA[i];
+						y++;
+					}
+				}
+			}
+		for (size_t x = 0; x < 6; x++)
+		{
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (t[x][y] != ' ' && t[x][y] != '|' && t[x][y] != '°' && t[x][y] != '_')
+				{
+					delay(0.1);
+				}
+				cout << t[x][y];
+			}
+			cout << "\n";
+		}
 		break;
 	case 12: //armour up m
 		logdetailsINIT(t, 6);
@@ -663,6 +692,38 @@ void logmess(size_t op)
 					for (auto i = 0; i < strlen(defU); ++i)
 					{
 						t[x][y] = defU[i];
+						y++;
+					}
+				}
+			}
+		for (size_t x = 0; x < 6; x++)
+		{
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (t[x][y] != ' ' && t[x][y] != '|' && t[x][y] != '°' && t[x][y] != '_')
+				{
+					delay(0.1);
+				}
+				cout << t[x][y];
+			}
+			cout << "\n";
+		}
+		break;
+	case 13: //When an enormous amount of damage pl
+		logdetailsINIT(t, 6);
+		for (size_t x = 0; x < 6; x++)
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (x == 2 && y == 5)
+				{
+					for (char c : mname)
+					{
+						t[x][y] = c;
+						y++;
+					}
+					for (auto i = 0; i < strlen(attA); ++i)
+					{
+						t[x][y] = attA[i];
 						y++;
 					}
 				}
@@ -1255,21 +1316,31 @@ void Abilities::battle(char id)
 				mac = 2;
 				if (atM.at(mac) == 0) //To check if the enemy has armour or not
 				{
-					Mhp -= atP.at(pac) / 2; //If no it gets a good chunck of damage
+					Mhp -= atP.at(pac); //If no it gets a good chunck of damage
 					system("cls");
 					visual_hud();
 					back(enem);
-					logmess(2);
+					logmess(11);
 					cout << "\n";
 					system("pause");
 				}
-				else
+				else if (atM.at(mac) >= atP.at(pac))
 				{
 					Mhp -= atP.at(pac) / atM.at(mac); //If so it doesn't get a good chunck of damage
 					system("cls");
 					visual_hud();
 					back(enem);
 					logmess(4);
+					cout << "\n";
+					system("pause");
+				}
+				else // When it is greater than the armour it does a lot of damage
+				{
+					Mhp -= atP.at(pac) / 2;
+					system("cls");
+					visual_hud();
+					back(enem);
+					logmess(2);
 					cout << "\n";
 					system("pause");
 				}
@@ -1322,21 +1393,31 @@ void Abilities::battle(char id)
 						pac = 2;
 						if (atP.at(pac) == 0)
 						{
-							Php -= atM.at(mac) / 2; //Same thing from the player side
+							Php -= atM.at(mac); //Same thing from the player side
 							system("cls");
 							visual_hud();
 							back(enem);
-							logmess(3);
+							logmess(13);
 							cout << "\n";
 							system("pause");
 						}
-						else
+						else if (atP.at(pac) >= atM.at(mac))
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
 							system("cls");
 							visual_hud();
 							back(enem);
 							logmess(5);
+							cout << "\n";
+							system("pause");
+						}
+						else
+						{
+							Php -= atM.at(mac) / 2;
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(3);
 							cout << "\n";
 							system("pause");
 						}
@@ -1386,21 +1467,31 @@ void Abilities::battle(char id)
 						mac = 1;
 						if (atP.at(pac) == 0)
 						{
-							Php -= atM.at(mac) / 2; //Same thing from the player side
+							Php -= atM.at(mac); //Same thing from the player side
 							system("cls");
 							visual_hud();
 							back(enem);
-							logmess(3);
+							logmess(13);
 							cout << "\n";
 							system("pause");
 						}
-						else
+						else if (atP.at(pac) >= atM.at(mac))
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
 							system("cls");
 							visual_hud();
 							back(enem);
 							logmess(5);
+							cout << "\n";
+							system("pause");
+						}
+						else
+						{
+							Php -= atM.at(mac) / 2;
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(3);
 							cout << "\n";
 							system("pause");
 						}
@@ -1454,21 +1545,31 @@ void Abilities::battle(char id)
 						mac = 1;
 						if (atP.at(pac) == 0)
 						{
-							Php -= atM.at(mac) / 2; //Same thing from the player side
+							Php -= atM.at(mac); //Same thing from the player side
 							system("cls");
 							visual_hud();
 							back(enem);
-							logmess(3);
+							logmess(13);
 							cout << "\n";
 							system("pause");
 						}
-						else
+						else if (atP.at(pac) >= atM.at(mac))
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
 							system("cls");
 							visual_hud();
 							back(enem);
 							logmess(5);
+							cout << "\n";
+							system("pause");
+						}
+						else
+						{
+							Php -= atM.at(mac) / 2;
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(3);
 							cout << "\n";
 							system("pause");
 						}
