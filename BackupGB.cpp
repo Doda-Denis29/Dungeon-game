@@ -1250,6 +1250,10 @@ void game(bool Life,int& pos)
 string getSpell(vector <string> spells, int numb)
 {
 	int getting_that_spell = rand() % numb;
+	if (getting_that_spell == 2)
+	{
+		getting_that_spell--;
+	}
 	return spells.at(getting_that_spell);
 }
 
@@ -1819,6 +1823,78 @@ void Abilities::battle(char id)
 					}
 					break;
 			case 6: //beast
+				if (SkellyA() == 0)
+				{
+					mac = 0;
+					if (atM.at(mac) > 0)
+					{
+						atM.at(mac) -= 2;
+						mac = 1;
+						pac = 2;
+						if (atP.at(pac) == 0)
+						{
+							Php -= atM.at(mac); //Same thing from the player side
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(13);
+							cout << "\n";
+							system("pause");
+						}
+						else if (atP.at(pac) >= atM.at(mac))
+						{
+							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(5);
+							cout << "\n";
+							system("pause");
+						}
+						else
+						{
+							Php -= atM.at(mac) / 2;
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(3);
+							cout << "\n";
+							system("pause");
+						}
+					}
+				}
+				else if (SkellyA() == 1)
+				{
+					mac = 2;
+					atM.at(mac) += 2;
+					mac = 0;
+					atM.at(mac) += 3;
+					system("cls");
+					visual_hud();
+					back(enem);
+					logmess(12);
+					system("pause");
+				}
+				else if (SkellyA() == 2)
+				{
+					mac = 0;
+					system("cls");
+					if (Php < 4 || atM.at(mac)>10)
+					{
+						atM.at(mac)++;
+						visual_hud();
+						back(enem);
+						logmess(8); //Success
+					}
+					else
+					{
+						visual_hud();
+						back(enem);
+						logmess(9); //Not success
+					}
+					cout << "\n";
+					system("pause");
+				}
 				break;
 			case 7: //LastBoss
 				break;
