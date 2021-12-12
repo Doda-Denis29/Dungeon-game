@@ -15,6 +15,8 @@ void visual_hud(); //For player and mobs
 void game(bool Life, int& pos); //The game loop
 void sound(size_t op); //Sound effects
 void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11;13 - doing a lot of dmg PL/M, 12 - armour up m
+float dmgfromSpell(string name_of_the_spell, char op);
+string getSpell(vector <string> spells, int numb); //To use for spell casters
 vector <float> atP; //Abilities for player
 vector <float> atM; //Abilities for mobs
 vector <string> spells; //The vector where all the spells are being placed
@@ -23,6 +25,7 @@ ofstream E("mobs.txt"); //What attributes the mobs have
 ofstream P("player.txt"); //What attributes the player has
 float Php{}, Mhp{};
 string pname{}, mname{};
+auto mac = 0, pac = 0;
 int main()
 {
 	int p = -1; //The position in the map
@@ -174,6 +177,8 @@ void logmess(size_t op)
 	const char intiN[] = { " was intimidated" };
 	const char defU[] = { " armoured up" };
 	const char attA[] = { " did an enormous amount of damage" };
+	const char magA1[] = { " used " };
+	const char magA2[] = { " & " };
 	auto ly = 0, con = 0, ly1 = 0, con1 = 0, ly2 = 0, con2 = 0;
 	switch (op)
 	{
@@ -741,6 +746,144 @@ void logmess(size_t op)
 			cout << "\n";
 		}
 		break;
+	case 14: //For spells a lot of dmg
+		logdetailsINIT(t, 6);
+		for (size_t x = 0; x < 6; x++)
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (x == 2 && y == 5)
+				{
+					for (char c : mname)
+					{
+						t[x][y] = c;
+						y++;
+					}
+					for (auto i = 0; i < strlen(magA1); ++i)
+					{
+						t[x][y] = magA1[i];
+						y++;
+					}
+					for (char c : getSpell(spells, mac))
+					{
+						t[x][y] = c;
+						y++;
+					}
+					t[x][y] = ' ';
+					y++;
+					t[x][y] = '&';
+					y++;
+					for (auto i = 0; i < strlen(attA); ++i)
+					{
+						t[x][y] = attA[i];
+						y++;
+					}
+				}
+			}
+		for (size_t x = 0; x < 6; x++)
+		{
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (t[x][y] != ' ' && t[x][y] != '|' && t[x][y] != '°' && t[x][y] != '_')
+				{
+					delay(0.1);
+				}
+				cout << t[x][y];
+			}
+			cout << "\n";
+		}
+		break;
+	case 15: //some dmg
+		logdetailsINIT(t, 6);
+		for (size_t x = 0; x < 6; x++)
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (x == 2 && y == 5)
+				{
+					for (char c : mname)
+					{
+						t[x][y] = c;
+						y++;
+					}
+					for (auto i = 0; i < strlen(magA1); ++i)
+					{
+						t[x][y] = magA1[i];
+						y++;
+					}
+					for (char c : getSpell(spells, mac))
+					{
+						t[x][y] = c;
+						y++;
+					}
+					t[x][y] = ' ';
+					y++;
+					t[x][y] = '&';
+					y++;
+					for (auto i = 0; i < strlen(resN); ++i)
+					{
+						t[x][y] = resN[i];
+						y++;
+					}
+				}
+			}
+		for (size_t x = 0; x < 6; x++)
+		{
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (t[x][y] != ' ' && t[x][y] != '|' && t[x][y] != '°' && t[x][y] != '_')
+				{
+					delay(0.1);
+				}
+				cout << t[x][y];
+			}
+			cout << "\n";
+		}
+		break;
+	case 16: //not a lot of dmg
+		logdetailsINIT(t, 6);
+		for (size_t x = 0; x < 6; x++)
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (x == 2 && y == 5)
+				{
+					for (char c : mname)
+					{
+						t[x][y] = c;
+						y++;
+					}
+					for (auto i = 0; i < strlen(magA1); ++i)
+					{
+						t[x][y] = magA1[i];
+						y++;
+					}
+					for (char c : getSpell(spells, mac))
+					{
+						t[x][y] = c;
+						y++;
+					}
+					t[x][y] = ' ';
+					y++;
+					t[x][y] = '&';
+					y++;
+					for (auto i = 0; i < strlen(resB); ++i)
+					{
+						t[x][y] = resB[i];
+						y++;
+					}
+				}
+			}
+		for (size_t x = 0; x < 6; x++)
+		{
+			for (size_t y = 0; y < 97; y++)
+			{
+				if (t[x][y] != ' ' && t[x][y] != '|' && t[x][y] != '°' && t[x][y] != '_')
+				{
+					delay(0.1);
+				}
+				cout << t[x][y];
+			}
+			cout << "\n";
+		}
+		break;
 	}
 }
 
@@ -833,6 +976,12 @@ void visual_hud()
 		cout << "&";
 	}
 	cout << endl;
+	space(92 - atM.at(3));
+	cout << "MANA:";
+	for (auto in = 0; in < atM.at(3); in++)
+	{
+		cout << "~";
+	}
 }
 
 void sound(size_t op)
@@ -1050,15 +1199,15 @@ void game(bool Life,int& pos)
 						Life = false;
 					}
 				}
-				else if (pos == 15) //Demonico
+				else if (pos >= 15 && pos <= 19) //Demonico
 				{
-					//battle
+					a.battle('#');
 					if (Php <= 0)
 					{
 						Life = false;
 					}
 				}
-				else if (pos == 15) //Beast
+				else if (pos >= 20 && pos <= 24) //Beast
 				{
 					//battle
 					if (Php <= 0)
@@ -1096,6 +1245,33 @@ void game(bool Life,int& pos)
 			}
 		}
 	}
+}
+
+string getSpell(vector <string> spells, int numb)
+{
+	int getting_that_spell = rand() % numb;
+	return spells.at(getting_that_spell);
+}
+
+float dmgfromSpell(string name_of_the_spell, char op)
+{
+	float dmg{};
+	switch (op)
+	{
+	case '#': //for demonico
+		if (name_of_the_spell == "Fireball")
+		{
+			dmg = 5;
+		}
+		else if (name_of_the_spell == "HellFire")
+		{
+			dmg = 6.5;
+		}
+		break;
+	case '%': //for the final boss
+		break;
+	}
+	return dmg;
 }
 
 void Abilities::addAbP() // Adding the player
@@ -1297,7 +1473,6 @@ void Abilities::battle(char id)
 	logmess(0); //encounter
 	cout << "\n Press any key to continue ... \n";
 	char ac = _getch();
-	auto mac = 0, pac = 0;
 	while (Php > 0 && Mhp > 0) //Fight time
 	{
 		system("cls");
@@ -1533,90 +1708,128 @@ void Abilities::battle(char id)
 			case 5: //Demon
 				if (DemonicoA() == 0)
 				{
-					//Spells
-				}
-				else if (DemonicoA() == 1)
-				{
-					mac = 0;
+					mac = 3;
 					if (atM.at(mac) > 0)
 					{
 						atM.at(mac) -= 2;
+						mac = 4;
 						pac = 2;
-						mac = 1;
+						float dmg{};
+						dmg = dmgfromSpell(getSpell(spells, mac), '#');
 						if (atP.at(pac) == 0)
 						{
-							Php -= atM.at(mac); //Same thing from the player side
+							Php -= dmg;
 							system("cls");
 							visual_hud();
 							back(enem);
-							logmess(13);
+							logmess(14); //A lot of dmg
 							cout << "\n";
 							system("pause");
 						}
-						else if (atP.at(pac) >= atM.at(mac))
+						else if (atP.at(pac) >= dmg)
 						{
-							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+							Php -= dmg / atP.at(pac);
 							system("cls");
 							visual_hud();
 							back(enem);
-							logmess(5);
+							logmess(16); //Not a lot of dmg
 							cout << "\n";
 							system("pause");
 						}
 						else
 						{
-							Php -= atM.at(mac) / 2;
+							Php -= dmg / 2;
 							system("cls");
 							visual_hud();
 							back(enem);
-							logmess(3);
+							logmess(15); //A bit of dmg
 							cout << "\n";
 							system("pause");
 						}
 					}
-				}
-				else if (DemonicoA() == 2)
-				{
-					mac = 2;
-					atM.at(mac) += 2;
-					mac = 0;
-					atM.at(mac) += 3;
-					system("cls");
-					visual_hud();
-					back(enem);
-					logmess(12);
-					system("pause");
-				}
-				else if (DemonicoA() == 3)
-				{
-					mac = 0;
-					system("cls");
-					visual_hud();
-					back(enem);
-					if (Php < 4 || atM.at(mac)>10)
+					else if (DemonicoA() == 1)
 					{
-						logmess(8); //Success
-						atM.at(mac)++;
+						mac = 0;
+						if (atM.at(mac) > 0)
+						{
+							atM.at(mac) -= 2;
+							pac = 2;
+							mac = 1;
+							if (atP.at(pac) == 0)
+							{
+								Php -= atM.at(mac); //Same thing from the player side
+								system("cls");
+								visual_hud();
+								back(enem);
+								logmess(13);
+								cout << "\n";
+								system("pause");
+							}
+							else if (atP.at(pac) >= atM.at(mac))
+							{
+								Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+								system("cls");
+								visual_hud();
+								back(enem);
+								logmess(5);
+								cout << "\n";
+								system("pause");
+							}
+							else
+							{
+								Php -= atM.at(mac) / 2;
+								system("cls");
+								visual_hud();
+								back(enem);
+								logmess(3);
+								cout << "\n";
+								system("pause");
+							}
+						}
 					}
-					else
+					else if (DemonicoA() == 2)
 					{
-						logmess(9); //Not success
+						mac = 2;
+						atM.at(mac) += 2;
+						mac = 0;
+						atM.at(mac) += 3;
+						system("cls");
+						visual_hud();
+						back(enem);
+						logmess(12);
+						system("pause");
 					}
-					cout << "\n";
-					system("pause");
-				}
-				break;
+					else if (DemonicoA() == 3)
+					{
+						mac = 0;
+						system("cls");
+						visual_hud();
+						back(enem);
+						if (Php < 4 || atM.at(mac)>10)
+						{
+							logmess(8); //Success
+							atM.at(mac)++;
+						}
+						else
+						{
+							logmess(9); //Not success
+						}
+						cout << "\n";
+						system("pause");
+					}
+					break;
 			case 6: //beast
 				break;
 			case 7: //LastBoss
 				break;
 			case 8: //LastLastBoss
 				break;
+				}
 			}
 		}
-	}
-	if (Mhp <= 0)
-	{
-		back(2);
+		if (Mhp <= 0)
+		{
+			back(2);
+		}
 	}
 }

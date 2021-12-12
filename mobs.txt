@@ -8,3 +8,23 @@ Skelly
 0
 Nothing
 
+@
+SkellyWarrior
+6.5
+12
+5
+3
+0
+0
+Nothing
+
+#
+Demonico
+13.5
+9
+8
+0
+8
+2
+HellFire
+
