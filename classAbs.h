@@ -41,6 +41,8 @@ public:
 	void addAbP(); //For player id=='P'
 	void addAbM(char id); //For mobs
 	void battle(char id); //Fighting
+	void saveAb(); //for saving player abilities
+	void addAbtoP(); //To give the player the abilities to him
 private:
 	float hp, stamina, mana;
 	std::string name, name_of_spell;

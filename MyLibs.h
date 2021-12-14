@@ -10,7 +10,7 @@
 * 6-Yellow
 * 7-White
 * 8-Gray
-* 9-LightBlue
+* 9-Light Blue
 * A-Light Green
 * B-Light Aqua
 * C-Light Red
@@ -43,15 +43,19 @@ void mapINIT(std::vector <short>& a)
     //0 means nothing, 1 means fight, 2 means decision, 3 means deadend, 4 means boss fight.
     for (auto in = 0; in < 26; in++)
     {
-        if (in % 3 == 0 && in != 24 && in != 0)
+        if (in % 3 == 0 && in != 24 && in != 0 && in != 6 && in != 9)
         {
             a.push_back(1);
         }
-        else if (in == 5 || in == 8 || in == 13 || in == 24)
+        else if (in == 5 || in == 8 || in == 13)
         {
             a.push_back(2);
         }
-        else if (in == 25)
+        else if (in == 6 || in == 9 || in == 14)
+        {
+            a.push_back(3);
+        }
+        else if (in == 24)
         {
             a.push_back(4);
         }
