@@ -12,7 +12,7 @@ void back(size_t bac); //Backgrounds 0 - Default hallway, 1 - splitt hallway, 2 
 void space(size_t numb_of_spaces); //To help ourselfs with spaces
 void decs(int& pos); //Decision for the 2's of the vec
 void visual_hud(); //For player and mobs
-void deadend(char k, int& p); //When you hit a deadend
+void deadend(int& p); //When you hit a deadend
 void game(bool Life, int& pos); //The game loop
 void sound(size_t op); //Sound effects
 void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11;13 - doing a lot of dmg PL/M, 12 - armour up m
@@ -21,6 +21,7 @@ bool f_bosstalk(); //For talking and taking a different ending
 string getSpell(vector <string> spells, int numb); //To use for spell casters
 vector <float> atP; //Abilities for player
 vector <float> atM; //Abilities for mobs
+vector <float> _atP;
 vector <string> spells; //The vector where all the spells are being placed
 vector <short> map; //The map
 ofstream E("mobs.txt"); //What attributes the mobs have
@@ -108,9 +109,8 @@ void decs(int& p)
 {
 	system("cls");
 	system("color 6");
-	long b{};
-	cout << "\t\t\t ";
-	const char mess[] = { "The hallway is splitting into two ways \n\t\t\t In which direction do you want to move ? \n\t\t\t 0 - Left \t\t\t 1 - Right" };
+	char b{};
+	const char mess[] = { "\t\t\t The hallway is splitting into two ways \n\t\t\t In which direction do you want to move ? \n\t\t\t 0 - Left \t\t\t 1 - Right" };
 	const char mess2[] = { "The long hallway has come to an end \n\t\t\t There appears to be a door in front of you \n\t\t\t\t Do you want to open it ? \n\t\t\t 0 - No \t\t\t\t 1 - Yes" };
 	const char mess3[] = { "The door opened by itself" };
 	if (p == 24)
@@ -126,7 +126,7 @@ void decs(int& p)
 		cout << "\n";
 		back(10);
 		cin >> b;
-		while (b != 1 && b != 0)
+		while (b != '1' && b != '0')
 		{
 			system("cls");
 			for (auto j = 0; j < strlen(mess2); ++j)
@@ -137,7 +137,7 @@ void decs(int& p)
 			back(10);
 			cin >> b;
 		}
-		if (b == 1)
+		if (b == '1')
 		{
 			p++;
 		}
@@ -166,7 +166,7 @@ void decs(int& p)
 		cout << "\n";
 		back(1);
 		cin >> b;
-		while (b != 1 && b != 0)
+		while (b != '1' && b != '0')
 		{
 			system("cls");
 			for (auto i = 0; i < strlen(mess); ++i)
@@ -177,13 +177,13 @@ void decs(int& p)
 			back(1);
 			cin >> b;
 		}
-		if (b == 0)
+		if (b == '0')
+		{
+			//Do nothing
+		}
+		else if (b == '1')
 		{
 			p++;
-		}
-		else if (b == 1)
-		{
-			p += 2;
 		}
 	}
 }
@@ -1008,9 +1008,11 @@ void visual_hud()
 	}
 }
 
-void deadend(char k, int& p)
+void deadend(int& p)
 {
-	const char deadendmess[] = { "\t\t\t It appears that you have reached a deadend \n\t\t\t It fuels your hatred towards the enemy even more\n\t\t\t +2 towards your strength" };
+	const char deadendmess[] = { "\t\t\t\t\t It appears that you have reached a deadend \n\t\t\t\t\t It fuels your hatred towards the enemy even more" };
+	char k;
+	system("cls");
 	for (auto i = 0; i < strlen(deadendmess); ++i)
 	{
 		if (deadendmess[i] != '\t' && deadendmess[i] != '\n')
@@ -1019,21 +1021,25 @@ void deadend(char k, int& p)
 		}
 		cout << deadendmess[i];
 	}
+	cout << endl;
 	back(11);
 	cout << endl;
-	cout << "Go back and select the right path... \n Press 'S' to go backwards";
-	moveinput(k, p);
+	cout << "Go back and select the right path... \n Press 'S' to go backwards \n";
+	cin >> k;
 	while (k != 'S' && k != 's')
 	{
+		system("cls");
 		for (auto i = 0; i < strlen(deadendmess); ++i)
 		{
 			cout << deadendmess[i];
 		}
+		cout << endl;
 		back(11);
 		cout << endl;
-		cout << "Go back and select the right path... \n Press 'S' to go backwards";
-		moveinput(k, p);
+		cout << "Go back and select the right path... \n Press 'S' to go backwards \n";
+		cin >> k;
 	}
+	p--;
 }
 
 void sound(size_t op)
@@ -1368,7 +1374,7 @@ void game(bool Life,int& pos)
 				decs(pos);
 				break;
 			case 3:
-				deadend(key, pos);
+				deadend(pos);
 				break;
 			case 4:
 				battle_loc = 5;
@@ -1546,35 +1552,43 @@ void Abilities::addAbP() // Adding the player
 	atP.push_back(armour);
 	atP.push_back(mana);
 	atP.push_back(num_of_spells);
+	_atP.push_back(Php);
+	_atP.push_back(stamina);
+	_atP.push_back(strength);
+	_atP.push_back(armour);
+	_atP.push_back(mana);
+	_atP.push_back(num_of_spells);
 	P << hp << endl << stamina << endl << strength << endl << armour << endl << mana << endl << num_of_spells << endl << name_of_spell;
 }
 
-void Abilities::saveAb()
+void Abilities::saveAb() //Storing the updated values after a battle and also before the battle if it is won
 {
-	P.clear();
-	id = 'P';
-	P << id << endl;
-	name = pname;
-	hp = Php;
-	stamina = atP.at(0);
-	strength = atP.at(1);
-	armour = atP.at(2);
-	mana = atP.at(3);
-	num_of_spells = atP.at(4);
-	P << hp << endl << stamina << endl << strength << endl << armour << endl << mana << endl << num_of_spells << endl << name_of_spell;
-	P.close();
+	for (auto in = 0; in < _atP.size(); in++)
+	{
+		if (in == 0)
+		{
+			_atP.at(in) = Php;
+		}
+		else
+		{
+			_atP.at(in) = atP.at(in - 1);
+		}
+	}
 }
 
-void Abilities::addAbtoP()
+void Abilities::addAbtoP() //Putting the stored values to the actual vector
 {
-	ifstream p("player.txt");
-	//TODO
-	Php = hp + 3;
-	atP.push_back(stamina + 4);
-	atP.push_back(strength++);
-	atP.push_back(armour++);
-	atP.push_back(mana);
-	atP.push_back(num_of_spells);
+	for (auto in = 0; in < _atP.size(); in++)
+	{
+		if (in == 0)
+		{
+			Php = _atP.at(in);
+		}
+		else
+		{
+			atP.at(in - 1) = _atP.at(in);
+		}
+	}
 }
 
 void Abilities::addAbM(char id)
@@ -1604,12 +1618,12 @@ void Abilities::addAbM(char id)
 	case '@': //For Skelies warrior
 		name = "SkellyWarrior";
 		mname = name;
-		hp = 16;
+		hp = 9;
 		Mhp = hp;
 		atM.clear();
-		stamina = 12;
-		strength = 7;
-		armour = 5;
+		stamina = 10;
+		strength = 5;
+		armour = 2;
 		mana = 0;
 		num_of_spells = 0;
 		atM.push_back(stamina);
@@ -1623,11 +1637,11 @@ void Abilities::addAbM(char id)
 	case '#': //For Demons
 		name = "Demonico";
 		mname = name;
-		hp = 18;
+		hp = 14;
 		Mhp = hp;
 		atM.clear();
 		stamina = 12;
-		strength = 8;
+		strength = 4;
 		armour = 0;
 		mana = 8;
 		num_of_spells = 2;
@@ -1645,11 +1659,11 @@ void Abilities::addAbM(char id)
 	case '$': //For beast
 		name = "Beast";
 		mname = name;
-		hp = 20;
+		hp = 15;
 		Mhp = hp;
 		atM.clear();
-		stamina = 22;
-		strength = 14;
+		stamina = 20;
+		strength = 10;
 		armour = 2;
 		num_of_spells = 0;
 		atM.push_back(stamina);
@@ -1667,7 +1681,7 @@ void Abilities::addAbM(char id)
 		Mhp = hp;
 		atM.clear();
 		stamina = 10;
-		strength = 15;
+		strength = 13;
 		armour = 6;
 		num_of_spells = 4;
 		atM.push_back(stamina);
