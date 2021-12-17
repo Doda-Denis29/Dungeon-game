@@ -1267,7 +1267,7 @@ bool f_bosstalk()
 {
 	long dec{};
 	const char talk1[] = { "\t\t\t\t Well hello there! ... \n\t\t\t I thought you were surely gonna die when you entered the dungeon, guess I was wrong\n" };
-	const char talk2[] = { "\t\t\t Ah what the hell let me cut to the chase \n\t\t\t\t So now I'm going to give you a choice ... \n\t\t You either going to leave this place and live your life and blah blah blah OR you can die here" };
+	const char talk2[] = { "\t\t\t Ah what the hell let me cut to the chase \n\t\t\t\t So now I'm going to give you a choice ... \n\t\t You either leave this place and live your life and blah blah blah OR you can just die here" };
 	const char bending[] = { "\t\t\t You chose to leave." };
 	const char gending[] = { "\t\t ... Ugh you chose to stay \n \t\t\t Well at least you will die quick and fast" };
 	system("cls");
@@ -1428,8 +1428,8 @@ void game(bool Life,int& pos)
 			case 4:
 				battle_loc = 5;
 				a.saveAb();
-				decs(pos);
-				if (f_bosstalk())
+				//decs(pos);
+				if (f_bosstalk)
 				{
 				battle5:
 					Life = true;
@@ -1439,9 +1439,18 @@ void game(bool Life,int& pos)
 					{
 						battle_loc = 6;
 					battle6:
+						Life = true;
 						last_dia();
 						a.battle('^');
-						return;
+						if (Php <= 0)
+						{
+							Life = false;
+							break;
+						}
+						else
+						{
+							return;
+						}
 					}
 				}
 				else
@@ -2370,7 +2379,7 @@ void Abilities::battle(char id)
 					system("pause");
 				}
 				break;
-			case 8: //LastLastBoss
+			case 9: //LastLastBoss
 				if (SkellyA() == 0)
 				{
 					mac = 0;
