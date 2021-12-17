@@ -47,11 +47,11 @@ void mapINIT(std::vector <short>& a)
         {
             a.push_back(1);
         }
-        else if (in == 5 || in == 8 || in == 13)
+        else if (in == 9 || in == 16)
         {
             a.push_back(2);
         }
-        else if (in == 6 || in == 9 || in == 14)
+        else if (in == 10 || in == 17)
         {
             a.push_back(3);
         }

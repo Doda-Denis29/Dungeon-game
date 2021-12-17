@@ -12,9 +12,9 @@ void back(size_t bac); //Backgrounds 0 - Default hallway, 1 - splitt hallway, 2 
 void space(size_t numb_of_spaces); //To help ourselfs with spaces
 void decs(int& pos); //Decision for the 2's of the vec
 void visual_hud(); //For player and mobs
+void last_dia(); //Last talk
 void deadend(int& p); //When you hit a deadend
 void game(bool Life, int& pos); //The game loop
-void sound(size_t op); //Sound effects
 void logmess(size_t op); //Messages box 0 - enc, 1 - Options for player, 2;3 - dmg a lot pl/mob, 4;5 - not dmg pl/mob, 6;7;8;9 - intiN,intiB mob intiN,intiB pl, 10 - armour up, 11;13 - doing a lot of dmg PL/M, 12 - armour up m
 float dmgfromSpell(string name_of_the_spell, char op);
 bool f_bosstalk(); //For talking and taking a different ending
@@ -111,7 +111,7 @@ void decs(int& p)
 	system("color 6");
 	char b{};
 	const char mess[] = { "\t\t\t The hallway is splitting into two ways \n\t\t\t In which direction do you want to move ? \n\t\t\t 0 - Left \t\t\t 1 - Right" };
-	const char mess2[] = { "The long hallway has come to an end \n\t\t\t There appears to be a door in front of you \n\t\t\t\t Do you want to open it ? \n\t\t\t 0 - No \t\t\t\t 1 - Yes" };
+	const char mess2[] = { "\t\t\t\tThe long hallway has come to an end \n\t\t\t There appears to be a door in front of you \n\t\t\t\t Do you want to open it ? \n\t\t\t 0 - No \t\t\t\t 1 - Yes" };
 	const char mess3[] = { "The door opened by itself" };
 	if (p == 24)
 	{
@@ -911,6 +911,33 @@ void logmess(size_t op)
 	}
 }
 
+void last_dia()
+{
+	const char lastmess[] = { "\t\t\t\t ... No it can't be ..." };
+	const char lastlastmess[] = { "I  W O N T  D I E " };
+	system("cls");
+	system("color 4");
+	for (auto in = 0; in < strlen(lastmess); ++in)
+	{
+		if (lastmess[in] != '\t')
+		{
+			delay(0.1);
+		}
+		cout << lastmess[in];
+	}
+	cout << endl;
+	system("pause");
+	system("cls");
+	cout << "\t\t\t\t";
+	for (auto in = 0; in < strlen(lastlastmess); ++in)
+	{
+		delay(0.2);
+		cout << lastlastmess[in];
+	}
+	cout << endl;
+	system("pause");
+}
+
 void moveinput(char k, int& p)
 {
 	while (k != 's' && k != 'S' && k != 'w' && k != 'W')
@@ -1042,24 +1069,6 @@ void deadend(int& p)
 	p--;
 }
 
-void sound(size_t op)
-{
-	switch (op)
-	{
-	case 0: //Skellies damage taken
-		PlaySound(TEXT("skellydmg.wav"), NULL, SND_FILENAME | SND_ASYNC);
-		delay(3);
-		break;
-	case 1: //Guy damage
-		PlaySound(TEXT("takedmg.wav"), NULL, SND_FILENAME | SND_ASYNC);
-		delay(3);
-		break;
-	case 2: //Theme for staring
-		PlaySound(TEXT("thunder.wav"), NULL, SND_FILENAME | SND_ASYNC);
-		break;
-	}
-}
-
 void space(size_t num_of_spaces)
 {
 	for (auto in = 0; in < num_of_spaces; in++)
@@ -1085,6 +1094,7 @@ void back(size_t bac)
 	ifstream DE("DeadEnd.txt");
 	string c;
 	const char warn[] = { "T H I S  F I G H T" };
+	const char done[] = { "Y O U R  L A S T  F I G H T" };
 	switch (bac)
 	{
 	case 0: //Default hallway
@@ -1210,6 +1220,34 @@ void back(size_t bac)
 			cout << c << "\n";
 		}
 		break;
+	case 12: //Succes done
+		system("cls");
+		system("color 4");
+		while (!BS.eof())
+		{
+			getline(BS, c);
+			space(33);
+			delay(0.5);
+			cout << c << " \n";
+		}
+		cout << "\t\t\t\t Y O U  W I N";
+		delay(2);
+		cout << ", \n\t\t\t\t";
+		for (auto in = 0; in < strlen(done); ++in)
+		{
+			if (done[in] == done[in + 1])
+			{
+				continue;
+			}
+			else
+			{
+				delay(0.2);
+			}
+			cout << done[in];
+		}
+		cout << endl << "\t\t\t\t";
+		system("pause");
+		break;
 	}
 	H3.close();
 	H1.close();
@@ -1243,7 +1281,7 @@ bool f_bosstalk()
 		cout << talk1[i];
 	}
 	system("pause");
-	system("clr");
+	system("cls");
 	for (auto i = 0; i < strlen(talk2); ++i)
 	{
 		if (talk2[i] != '\t' && talk2[i] != '\n')
@@ -1252,16 +1290,16 @@ bool f_bosstalk()
 		}
 		cout << talk2[i];
 	}
-	cout << "\n\t\t\t Press 0 to leave \t\t Press 1 to stay";
+	cout << "\n\t\t\t Press 0 to leave \t\t Press 1 to stay  ";
 	cin >> dec;
 	while (dec != 0 && dec != 1)
 	{
-		system("clr");
+		system("cls");
 		for (auto i = 0; i < strlen(talk2); ++i)
 		{
 			cout << talk2[i];
 		}
-		cout << "\n\t\t\t Press 0 to leave \t\t Press 1 to stay";
+		cout << "\n\t\t\t Press 0 to leave \t\t Press 1 to stay  ";
 		cin >> dec;
 	}
 	if (dec == 0)
@@ -1271,6 +1309,7 @@ bool f_bosstalk()
 		{
 			cout << bending[i];
 		}
+		cout << endl;
 		system("pause");
 		return false;
 	}
@@ -1315,6 +1354,8 @@ void game(bool Life,int& pos)
 			switch (map.at(pos))
 			{
 			case 0:
+				Php++;
+				atP.at(0)++;
 				break;
 			case 1:
 				if (pos >= 3 && pos <= 6) //Skelly
@@ -1322,6 +1363,7 @@ void game(bool Life,int& pos)
 					battle_loc = 1;
 					a.saveAb();
 				battle1:
+					Life = true;
 					a.battle('!');
 					if (Php <= 0)
 					{
@@ -1335,6 +1377,7 @@ void game(bool Life,int& pos)
 					battle_loc = 2;
 					a.saveAb();
 				battle2:
+					Life = true;
 					a.battle('@');
 					if (Php <= 0)
 					{
@@ -1348,6 +1391,7 @@ void game(bool Life,int& pos)
 					battle_loc = 3;
 					a.saveAb();
 				battle3:
+					Life = true;
 					a.battle('#');
 					if (Php <= 0)
 					{
@@ -1361,6 +1405,7 @@ void game(bool Life,int& pos)
 					battle_loc = 4;
 					a.saveAb();
 				battle4:
+					Life = true;
 					a.battle('$');
 					if (Php <= 0)
 					{
@@ -1372,18 +1417,32 @@ void game(bool Life,int& pos)
 				break;
 			case 2:
 				decs(pos);
+				Php++;
+				atP.at(0)++;
 				break;
 			case 3:
 				deadend(pos);
+				Php++;
+				atP.at(0)++;
 				break;
 			case 4:
 				battle_loc = 5;
 				a.saveAb();
 				decs(pos);
-				if (f_bosstalk)
+				if (f_bosstalk())
 				{
 				battle5:
+					Life = true;
 					a.battle('%');
+					a.saveAb();
+					if (Life)
+					{
+						battle_loc = 6;
+					battle6:
+						last_dia();
+						a.battle('^');
+						return;
+					}
 				}
 				else
 				{
@@ -1437,6 +1496,9 @@ void game(bool Life,int& pos)
 					break;
 				case 5:
 					goto battle5;
+					break;
+				case 6:
+					goto battle6;
 					break;
 				}
 			}
@@ -1504,9 +1566,9 @@ void Abilities::addAbP() // Adding the player
 	pname = name;
 	P << name << endl;
 	system("pause");
-	cout << "You have 25 points to get yourself started \n Use them with caution \n";
+	cout << "You have 45 points to get yourself started \n Use them with caution \n";
 	delay(3);
-	auto l = 25;
+	auto l = 45;
 	hp = 0.0;
 	stamina = 0.0;
 	armour = 0;
@@ -1588,6 +1650,11 @@ void Abilities::addAbtoP() //Putting the stored values to the actual vector
 		{
 			atP.at(in - 1) = _atP.at(in);
 		}
+	}
+	Php += 5; //For balacing the game out a bit
+	for (auto in = 0; in < atP.size(); in++)
+	{
+		atP.at(in) += 3; // again for balance only
 	}
 }
 
@@ -1698,12 +1765,12 @@ void Abilities::addAbM(char id)
 	case '^': //Last phase of the final boss
 		name = "Angry_Devil_Boss";
 		mname = name;
-		hp = 50;
+		hp = 30;
 		Mhp = hp;
 		atM.clear();
-		stamina = 50;
-		strength = 100;
-		armour = 20;
+		stamina = 20;
+		strength = 18;
+		armour = 10;
 		num_of_spells = 0;
 		atM.push_back(stamina);
 		atM.push_back(strength);
@@ -1719,6 +1786,7 @@ void Abilities::addAbM(char id)
 void Abilities::battle(char id)
 {
 	system("cls");
+	bool last_fight{};
 	size_t enem{}; //To know which background to print out
 	switch (id) //To print out the actual background of the enemy
 	{
@@ -1754,7 +1822,7 @@ void Abilities::battle(char id)
 		break;
 	}
 	logmess(0); //encounter
-	cout << "\n Press any key to continue ... \n";
+	cout << "\n Press any key to continue ... ";
 	char ac = _getch();
 	while (Php > 0 && Mhp > 0) //Fight time
 	{
@@ -1785,6 +1853,7 @@ void Abilities::battle(char id)
 				else if (atM.at(mac) >= atP.at(pac))
 				{
 					Mhp -= atP.at(pac) / atM.at(mac); //If so it doesn't get a good chunck of damage
+					atM.at(mac) -= 3;
 					system("cls");
 					visual_hud();
 					back(enem);
@@ -1795,6 +1864,7 @@ void Abilities::battle(char id)
 				else // When it is greater than the armour it does a lot of damage
 				{
 					Mhp -= atP.at(pac) / 2;
+					atM.at(mac) -= 1;
 					system("cls");
 					visual_hud();
 					back(enem);
@@ -1862,6 +1932,7 @@ void Abilities::battle(char id)
 						else if (atP.at(pac) >= atM.at(mac))
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+							atP.at(pac) -= 3;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -1872,6 +1943,7 @@ void Abilities::battle(char id)
 						else
 						{
 							Php -= atM.at(mac) / 2;
+							atP.at(pac) -= 1;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -1936,6 +2008,7 @@ void Abilities::battle(char id)
 						else if (atP.at(pac) >= atM.at(mac))
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+							atP.at(pac) -= 3;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -1946,6 +2019,7 @@ void Abilities::battle(char id)
 						else
 						{
 							Php -= atM.at(mac) / 2;
+							atP.at(pac) -= 1;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -2012,6 +2086,7 @@ void Abilities::battle(char id)
 						else if (atP.at(pac) >= dmg)
 						{
 							Php -= dmg / atP.at(pac);
+							atP.at(pac) -= 3;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -2022,6 +2097,7 @@ void Abilities::battle(char id)
 						else
 						{
 							Php -= dmg / 2;
+							atP.at(pac) -= 1;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -2124,6 +2200,7 @@ void Abilities::battle(char id)
 						else if (atP.at(pac) >= atM.at(mac))
 						{
 							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+							atP.at(pac) -= 3;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -2134,6 +2211,7 @@ void Abilities::battle(char id)
 						else
 						{
 							Php -= atM.at(mac) / 2;
+							atP.at(pac) -= 1;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -2200,6 +2278,7 @@ void Abilities::battle(char id)
 						else if (atP.at(pac) >= dmg)
 						{
 							Php -= dmg / atP.at(pac);
+							atP.at(pac) -= 3;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -2210,6 +2289,7 @@ void Abilities::battle(char id)
 						else
 						{
 							Php -= dmg / 2;
+							atP.at(pac) -= 1;
 							system("cls");
 							visual_hud();
 							back(enem);
@@ -2291,12 +2371,93 @@ void Abilities::battle(char id)
 				}
 				break;
 			case 8: //LastLastBoss
+				if (SkellyA() == 0)
+				{
+					mac = 0;
+					if (atM.at(mac) > 0)
+					{
+						atM.at(mac) -= 2;
+						mac = 1;
+						pac = 2;
+						if (atP.at(pac) == 0)
+						{
+							Php -= atM.at(mac); //Same thing from the player side
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(13);
+							cout << "\n";
+							system("pause");
+						}
+						else if (atP.at(pac) >= atM.at(mac))
+						{
+							Php -= atM.at(mac) / atP.at(pac); //same thing from the player side
+							atP.at(pac) -= 3;
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(5);
+							cout << "\n";
+							system("pause");
+						}
+						else
+						{
+							Php -= atM.at(mac) / 2;
+							atP.at(pac) -= 1;
+							system("cls");
+							visual_hud();
+							back(enem);
+							logmess(3);
+							cout << "\n";
+							system("pause");
+						}
+					}
+				}
+				else if (SkellyA() == 1)
+				{
+					mac = 2;
+					atM.at(mac) += 2;
+					mac = 0;
+					atM.at(mac) += 3;
+					system("cls");
+					visual_hud();
+					back(enem);
+					logmess(12);
+					system("pause");
+				}
+				else if (SkellyA() == 2)
+				{
+					mac = 0;
+					system("cls");
+					if (Php < 4 || atM.at(mac)>10)
+					{
+						atM.at(mac)++;
+						visual_hud();
+						back(enem);
+						logmess(8); //Success
+					}
+					else
+					{
+						visual_hud();
+						back(enem);
+						logmess(9); //Not success
+					}
+					cout << "\n";
+					system("pause");
+				}
 				break;
 			}//Switch
 		}//from if bracket
 		else if (Mhp <= 0)
 		{
+		if (enem == 9)
+		{
+			back(12);
+		}
+		else
+		{
 			back(2);
 		}
+		}//Else if(mhp<=0) bracket
 	}//While loop
-}//The actual function bracket
+}//The function bracket

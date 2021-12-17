@@ -23,7 +23,6 @@
 
 #ifndef classABs
 #define classAbs
-#define Apple_sauce mana;
 class Abilities { //Abs for every mob
 public:
 	Abilities()
