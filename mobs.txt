@@ -4,7 +4,17 @@ Devil_Boss
 10
 13
 6
-0
+12
+4
+Hell_Sword_Mastery
+
+%
+Devil_Boss
+26
+10
+13
+6
+12
 4
 Hell_Sword_Mastery
 

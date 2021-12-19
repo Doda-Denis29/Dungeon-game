@@ -126,4 +126,21 @@ int DemonicoA()
     }
 }
 
+int fBoss()
+{
+    size_t atc = rand();
+    if (atc % 2 == 0)
+    {
+        return 0;
+    }
+    else if (atc % 2 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 2;
+    }
+}
+
 #endif

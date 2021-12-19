@@ -1428,12 +1428,17 @@ void game(bool Life,int& pos)
 			case 4:
 				battle_loc = 5;
 				a.saveAb();
-				//decs(pos);
-				if (f_bosstalk)
+				decs(pos);
+				if (f_bosstalk())
 				{
 				battle5:
 					Life = true;
 					a.battle('%');
+					if (Php <= 0)
+					{
+						Life = false;
+						break;
+					}
 					a.saveAb();
 					if (Life)
 					{
@@ -1575,9 +1580,9 @@ void Abilities::addAbP() // Adding the player
 	pname = name;
 	P << name << endl;
 	system("pause");
-	cout << "You have 45 points to get yourself started \n Use them with caution \n";
+	cout << "You have 30 points to get yourself started \n Use them with caution \n";
 	delay(3);
-	auto l = 45;
+	auto l = 30;
 	hp = 0.0;
 	stamina = 0.0;
 	armour = 0;
@@ -1759,6 +1764,7 @@ void Abilities::addAbM(char id)
 		stamina = 10;
 		strength = 13;
 		armour = 6;
+		mana = 12;
 		num_of_spells = 4;
 		atM.push_back(stamina);
 		atM.push_back(strength);
@@ -2263,8 +2269,8 @@ void Abilities::battle(char id)
 					system("pause");
 				}
 				break;
-			case 7: //LastBoss
-				if (DemonicoA() == 0)
+			case 8: //LastBoss
+				if (fBoss() == 0)
 				{
 					mac = 3;
 					if (atM.at(mac) > 0)
@@ -2308,7 +2314,7 @@ void Abilities::battle(char id)
 						}
 					}
 				}
-				else if (DemonicoA() == 1)
+				else if (fBoss() == 1)
 				{
 					mac = 0;
 					if (atM.at(mac) > 0)
@@ -2348,19 +2354,7 @@ void Abilities::battle(char id)
 						}
 					}
 				}
-				else if (DemonicoA() == 2)
-				{
-					mac = 2;
-					atM.at(mac) += 2;
-					mac = 0;
-					atM.at(mac) += 3;
-					system("cls");
-					visual_hud();
-					back(enem);
-					logmess(12);
-					system("pause");
-				}
-				else if (DemonicoA() == 3)
+				else if (fBoss() == 2)
 				{
 					mac = 0;
 					system("cls");
